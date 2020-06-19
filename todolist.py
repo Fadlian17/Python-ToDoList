@@ -91,29 +91,53 @@ class Todolist:
 
     @click.group()
     def todo_app():
-        """To Do List App Mysql"""
+        pass
 
     @todo_app.command("show")
-    def list():
+    def show():
         """Todopy List"""
+        query = ("SELECT * FROM tb_todo")
+        c_cursor.execute(query)
+        for q in c_cursor:
+            print(q)
 
     @todo_app.command("add")
-    def add():
+    @click.argument("activity")
+    def add(activity):
         """Todopy Add"""
+        query_data = "INSERT INTO tb_todo (activity) VALUES (%s)"
+        new_todo_list = (activity,)
+        c_cursor.execute(query_data, new_todo_list)
+        connect.commit()
+        print("success add data")
 
     @todo_app.command("update")
-    def update():
+    @click.argument("id")
+    @click.argument("activity")
+    def update(id, activity):
         """Todopy Update"""
+        query_data = "UPDATE tb_todo SET activity = (%s) WHERE id= (%s)"
+        new_update = (activity, id)
+        c_cursor.execute(query_data, new_update)
+        connect.commit()
 
     @todo_app.command("delete")
-    def delete():
+    @click.argument("id")
+    def delete(id):
         """Todopy Delete"""
+        query_data = "DELETE FROM tb_todo WHERE id= (%s)"
+        new_update = (id,)
+        c_cursor.execute(query_data, new_update)
+        connect.commit()
 
-    @todo_app.command("clear")
+    @ todo_app.command("clear")
     def clear():
         """Todopy Clear"""
+        query_data = "DELETE FROM tb_todo"
+        c_cursor.execute(query_data)
+        connect.commit()
 
-    @todo_app.command("set")
+    @ todo_app.command("set")
     def set():
         """Todopy Set """
 
