@@ -94,6 +94,7 @@ class Todolist:
         pass
 
     @todo_app.command("show")
+    @staticmethod
     def show():
         """Todopy List"""
         query = ("SELECT * FROM tb_todo")
@@ -109,7 +110,7 @@ class Todolist:
         new_todo_list = (activity,)
         c_cursor.execute(query_data, new_todo_list)
         connect.commit()
-        print("success add data")
+        print("success add data todopy")
 
     @todo_app.command("update")
     @click.argument("id")
@@ -120,6 +121,7 @@ class Todolist:
         new_update = (activity, id)
         c_cursor.execute(query_data, new_update)
         connect.commit()
+        print("success update todopy")
 
     @todo_app.command("delete")
     @click.argument("id")
@@ -129,17 +131,27 @@ class Todolist:
         new_update = (id,)
         c_cursor.execute(query_data, new_update)
         connect.commit()
+        print("success delete field todopy")
 
     @ todo_app.command("clear")
     def clear():
         """Todopy Clear"""
+        ask_input = input("Are you want to delete ?")
         query_data = "DELETE FROM tb_todo"
-        c_cursor.execute(query_data)
-        connect.commit()
+        if ask_input == 'y':
+            c_cursor.execute(query_data)
+            connect.commit()
 
-    @ todo_app.command("set")
-    def set():
-        """Todopy Set """
+        print("success delete all field todopy")
+
+    @ todo_app.command("done")
+    @click.argument("id")
+    def done(id):
+        """Todopy DONE"""
+        query_data = "UPDATE tb_todo SET status = 1 WHERE id= (%s)"
+        new_update = (id,)
+        all_data = c_cursor.execute(query_data, new_update)
+        connect.commit()
 
 
 if __name__ == '__main__':
