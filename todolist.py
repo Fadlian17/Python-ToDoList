@@ -94,13 +94,16 @@ class Todolist:
         pass
 
     @todo_app.command("show")
-    @staticmethod
     def show():
         """Todopy List"""
         query = ("SELECT * FROM tb_todo")
         c_cursor.execute(query)
         for q in c_cursor:
-            print(q)
+            if q[2] == 1:
+                status = "(DONE)"
+            else:
+                status = ""
+            print("{} | {} | {}".format(q[0], q[1], status))
 
     @todo_app.command("add")
     @click.argument("activity")
@@ -147,8 +150,17 @@ class Todolist:
     @ todo_app.command("done")
     @click.argument("id")
     def done(id):
-        """Todopy DONE"""
+        """Todopy DONE STATUS"""
         query_data = "UPDATE tb_todo SET status = 1 WHERE id= (%s)"
+        new_update = (id,)
+        all_data = c_cursor.execute(query_data, new_update)
+        connect.commit()
+
+    @ todo_app.command("undone")
+    @click.argument("id")
+    def undone(id):
+        """Todopy UNDONE STATUS"""
+        query_data = "UPDATE tb_todo SET status = 0 WHERE id= (%s)"
         new_update = (id,)
         all_data = c_cursor.execute(query_data, new_update)
         connect.commit()
